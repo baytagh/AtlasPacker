@@ -3,7 +3,7 @@
     Properties
     {
         _MainTex("Main Texture", Any) = "" {}
-        _BasePos("Base Pos", Vector) = (0,0,1,1) // 位置偏移
+        _BasePos("Base Pos", Vector) = (0,0,1,1) // 绘制区域
         [MaterialToggle] PixelSnap("Pixel Snap", Float) = 1
     }
     SubShader

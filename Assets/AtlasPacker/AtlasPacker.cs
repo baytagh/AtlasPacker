@@ -42,6 +42,57 @@ namespace AtlasPacker {
         }
 
         /// <summary>
+        /// reference type
+        /// </summary>
+        /// <param name="Auv0"></param>
+        /// <param name="tx"></param>
+        /// <param name="margin_lt"></param>
+        /// <param name="margin_rb"></param>
+        /// <param name="src"></param>
+        public static void PackTexture(IAtlasRect[] Auv0, out RenderTexture tx, int margin_lt = 1, int margin_rb = 1,
+            RectAtlasTexture src = null) {
+            CheckBufMesh();
+            src = src ?? _gen;
+            
+            // 初始化输出
+            // 遍历uv
+            int len = Auv0.Length;
+            for (int i = 0; i < len; i++) {
+                IAtlasRect uv = Auv0[i];
+                // 保存先前用来绘制
+                RectInt pre = uv.ToRect();
+                Rect pre_uv = uv.ToUvRect();
+                Texture pre_tex = uv.tex;
+                // check更新绘制的纹理到网格
+                FineMeshToTexture(uv.tex, src: src);
+                RectInt atlas_rectuv = src.CreateRect(pre.width + margin_lt + margin_rb, pre.height + margin_lt + margin_rb,
+                    out _, out _);
+                // 进行偏移
+                atlas_rectuv.x += margin_lt;
+                atlas_rectuv.y += margin_lt;
+                atlas_rectuv.width = pre.width;
+                atlas_rectuv.height = pre.height;
+                
+                uv.Set(atlas_rectuv);
+                // 绘制uv及ver
+                _mesh_buf.Tri(0, 1, 2).Tri(0, 2, 3);
+                _mesh_buf.Ver(atlas_rectuv.x, atlas_rectuv.y, new Vector2(pre_uv.x, pre_uv.y), Matrix4x4.identity);
+                _mesh_buf.Ver(atlas_rectuv.x, atlas_rectuv.yMax, new Vector2(pre_uv.x, pre_uv.yMax), Matrix4x4.identity);
+                _mesh_buf.Ver(atlas_rectuv.xMax, atlas_rectuv.yMax, new Vector2(pre_uv.xMax, pre_uv.yMax), Matrix4x4.identity);
+                _mesh_buf.Ver(atlas_rectuv.xMax, atlas_rectuv.y, new Vector2(pre_uv.xMax, pre_uv.y), Matrix4x4.identity);
+            }
+            
+            // 输出纹理
+            FlushBufferRenderToTexture();
+            // 生成新的rect
+            for (int i = 0; i < Auv0.Length; i++) {
+                IAtlasRect atlasRect = Auv0[i];
+                atlasRect.tex = src.Tx;
+            }
+            tx = src.ExtractTx();
+        }
+
+        /// <summary>
         /// 打包纹理，uvrect为lb为基准点。x→正，y↑正
         /// </summary>
         /// <param name="Auv0"></param>
