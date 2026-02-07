@@ -6,7 +6,7 @@ public class NewBehaviourScript : MonoBehaviour {
     #region 内部类
 
     private class AtlasRect2 : IAtlasRect {
-        public string id;
+        public string id { get; set; }
         public Texture tex { get; set; }
         public int x { get; set; }
         public int y { get; set; }

@@ -49,14 +49,14 @@ namespace AtlasPacker {
         /// <param name="margin_lt"></param>
         /// <param name="margin_rb"></param>
         /// <param name="src"></param>
-        public static void PackTexture(IAtlasRect[] Auv0, out RenderTexture tx, int margin_lt = 1, int margin_rb = 1,
+        public static void PackTexture(IList<IAtlasRect> Auv0, out RenderTexture tx, int margin_lt = 1, int margin_rb = 1,
             RectAtlasTexture src = null) {
             CheckBufMesh();
             src = src ?? _gen;
             
             // 初始化输出
             // 遍历uv
-            int len = Auv0.Length;
+            int len = Auv0.Count;
             for (int i = 0; i < len; i++) {
                 IAtlasRect uv = Auv0[i];
                 // 保存先前用来绘制
@@ -85,7 +85,7 @@ namespace AtlasPacker {
             // 输出纹理
             FlushBufferRenderToTexture();
             // 生成新的rect
-            for (int i = 0; i < Auv0.Length; i++) {
+            for (int i = 0; i < Auv0.Count; i++) {
                 IAtlasRect atlasRect = Auv0[i];
                 atlasRect.tex = src.Tx;
             }
@@ -101,7 +101,7 @@ namespace AtlasPacker {
         /// <param name="margin_lt"></param>
         /// <param name="margin_rb"></param>
         /// <param name="src">使用的src texture</param>
-        public static void PackTexture(AtlasRect[] Auv0, ref List<AtlasRect> Auv, out RenderTexture tx,
+        public static void PackTexture(IList<AtlasRect> Auv0, ref List<AtlasRect> Auv, out RenderTexture tx,
             int margin_lt = 1, int margin_rb = 1, RectAtlasTexture src = null) {
             CheckBufMesh();
             src = src ?? _gen;
@@ -110,7 +110,7 @@ namespace AtlasPacker {
             Auv = Auv ?? new List<AtlasRect>();
             Auv.Clear();
             // 遍历uv
-            int len = Auv0.Length;
+            int len = Auv0.Count;
             for (int i = 0; i < len; i++) {
                 AtlasRect uv = default;
                 AtlasRect pre = Auv0[i];

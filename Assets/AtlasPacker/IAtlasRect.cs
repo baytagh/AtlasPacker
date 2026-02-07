@@ -2,6 +2,7 @@
 
 namespace AtlasPacker {
     public interface IAtlasRect {
+        string id { get; }
         
         Texture tex { get; set; }
         
